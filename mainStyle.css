@@ -16,6 +16,7 @@ body
     min-width: fit-content;
 }
 
+/* #region header */
 .header
 {
     padding: 15px 100px;   
@@ -41,31 +42,124 @@ body
 .menu-container p{color: gray;}
 .menu-container p:first-child{color: black;}
 
-
-
 .login
 {
     background-color: white;        
-    font-size: 25px;
+    font-size: 22px;
     font-weight: 500;                        
     margin-top: auto;
     margin-bottom: auto;
     border: none;
     border-radius: 10px;    
-    padding: 10px 15px;
-    margin-left: 90px;
-}   
-
-.main-container
-{
-    padding: 15px 100px;
-    display: flex;
-    flex-direction: column;
+    padding: 15px 12px;
     box-sizing: border-box;
-}
+    margin-left: 170px;
+}   
 
 .logo
 {
     margin-top: auto;
     margin-bottom: auto;
 }
+/* #endregion */
+
+.main-container
+{
+    margin-right: auto;
+    margin-left: 17%;
+    margin-top: 90px;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    width: 60%;
+}
+
+#main-header
+{
+    font-weight: 700;
+    font-size: 56px;
+    line-height: 42px;
+}
+
+/* #region Converter */
+.converter-wrapper
+{
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 40px;
+    row-gap: 80px;
+    column-gap: 125px;    
+    box-sizing: border-box;    
+}
+
+.converter p
+{
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 14px;
+    color: #9F9F9F;    
+}
+
+.currency-container
+{
+    display: flex;
+    border: 1px solid #9F9F9F;    
+    margin-top: 20px;   
+    box-sizing: content-box; 
+    border-radius: 5px;    
+}
+
+.currency-value
+{
+    border-right: 1px solid #9F9F9F;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 14px;    
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #9F9F9F;
+    box-sizing: border-box;
+    height: 40px;
+    padding: 10px 20px;
+}
+
+.currency-value:first-child
+{
+    border-left: 0px;
+    border-radius: 4px 0 0 4px;
+}
+
+.currency-value:last-child
+{
+    border-right: 0px;
+    border-radius: 0 4px 4px 0px;
+}
+
+.calc-container
+{
+    margin-top: 30px;
+    border-radius: 5px;
+    border: 1px solid #9F9F9F;
+    padding: 20px 15px;
+    box-sizing: border-box;
+}
+
+.user-input
+{
+    border: none;
+    font-size: 40px;
+    max-width: 250px;
+}
+
+.user-input:focus{outline: none;}
+
+.currency-info
+{
+    color: #9F9F9F;
+    margin-top: 30px;
+    font-size: 16px;
+    line-height: 14px;
+    font-weight: 400;
+}
+/* #endregion */

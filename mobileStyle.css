@@ -22,12 +22,13 @@
     {
         position: absolute;     
         left: 0;
+        background-color: white;
         top: calc(100% + .9rem);
-        box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .1);
+        box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .4);
         opacity: 0;
         transform: translateY(-20px);
         pointer-events: none;
-        transition: opacity 200ms ease-in-out, transform 200ms ease-in-out;
+        transition: transform 200ms ease-in-out;
         box-sizing: border-box;
         padding: 0 5px 5px 0;
     }
@@ -37,12 +38,13 @@
         font-size: 20px;
         color: gray;
         margin-top: 3px;
+        background-color: white;
         letter-spacing: 0.06em;        
     }
 
     .collapsible-menu p:first-child
     {
-        color: black;
+        color: black;        
     }
 
     .drop-menu-button
@@ -76,14 +78,65 @@
         margin-left: 100px;
     }
 
-    .main-container
-    {
-        padding: 15px 80px;        
-    }
-
     .logo
     {
         margin-top: auto;
         margin-bottom: auto;
     }
+
+    #main-header
+    {
+        font-weight: 700;
+        font-size: 45px;
+        line-height: 42px;
+    }
+    
+    .main-container
+    {
+        margin-right: auto;
+        margin-left: auto;
+        margin-top: 70px;
+    }
+
+    #main-header
+    {
+        margin: auto;
+    }
+    
+    /* #region Converter */
+    .converter
+    {
+        margin-right: auto;
+        margin-left: auto;
+    }
+    
+    .converter-wrapper
+    {
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    .converter p
+    {        
+        font-size: 25px;
+        line-height: 14px;     
+    }
+
+    .currency-containe
+    {
+        max-width: 380px;
+    }
+
+    .currency-value
+    {
+        font-size: 28px;
+    }
+
+    .user-input
+    {
+        font-size: 65px;
+        max-width: 450px;
+    }
+    
+    /* #endregion */
 }
