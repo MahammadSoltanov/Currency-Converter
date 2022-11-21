@@ -1,0 +1,16 @@
+<img src="/images/logo.svg">
+
+            <div class="collapsible">
+                <button class="drop-menu-button">Меню</button> 
+                <div class="collapsible-menu">
+                    <p>БАНК</p>
+                    <p>БИЗНЕС</p>
+                    <p>ИНВЕСТИЦИИ</p>
+                    <p>СТРАХОВАНИЕ</p>
+                    <p>МОБАЙЛ</p>
+                    <p>ПУТЕШЕСТВИЕ</p>
+                    <p>РАЗВЛЕЧЕНИЕ</p>
+                </div>
+            </div>
+            
+<button class="login">ВОЙТИ</button>
