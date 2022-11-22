@@ -48,27 +48,33 @@ window.addEventListener('resize', function(event) {
 }, true);
 //#endregion
 
+// Variables that contain current currencies
 let firstCurrency, secondCurrency;
 firstCurrency = 'RUB';
 secondCurrency = 'USD';
 
+let defaultInfo;
+
+// Eight buttons that change currencies
 const currencyButtons = document.getElementsByClassName('currency-value');
 changeColor(0); changeColor(5);
 
-for(let i = 0; i < currencyButtons.length; i++){currencyButtons[i].addEventListener('click', function(e){changeColor(e,i);});}
+// Adding event listener to each button
+for(let i = 0; i < currencyButtons.length; i++){currencyButtons[i].addEventListener('click', function(){changeColor(i);});}
 
+// Inputs where user enters value to be converted in both way
 const userInputs = document.getElementsByClassName('user-input');
-userInputs[0].addEventListener('input', convertMoney(from, to));
-userInputs[1].addEventListener('input', convertMoney(from, to));
+userInputs[0].addEventListener('keypress', convertMoney1);
+userInputs[1].addEventListener('keypress', convertMoney2);
 
 const currencyInfos = document.getElementsByClassName('currency-info');
 
-function changeColor(e, index)
+function changeColor(index)
 {   
+    console.log(defaultInfo);
     if(index < 4)
     {
-        firstCurrency = currencyButtons[index].textContent;
-        updateCurrencyInfo(0);    
+        firstCurrency = currencyButtons[index].textContent;                
         currencyButtons[index].style.backgroundColor = '#833AE0';
         currencyButtons[index].style.color = 'white';
 
@@ -80,12 +86,14 @@ function changeColor(e, index)
                 currencyButtons[i].style.color = '#9F9F9F';
             }
         }
+
+
     }
 
     else
     {
         secondCurrency = currencyButtons[index].textContent;
-        updateCurrencyInfo(1);    
+        updateCurrencyInfo();        
         currencyButtons[index].style.backgroundColor = '#833AE0';
         currencyButtons[index].style.color = 'white';
 
@@ -100,22 +108,36 @@ function changeColor(e, index)
     }
 }
 
-function convertMoney(from, to)
-{
-
+function convertMoney1(event)
+{   
+    // Checking for correct input format
+    if(event.target.value[event.target.value.length - 1] == ',') event.target.value = event.target.value.replace(',', '.');
+    if((event.which < 48 || event.which > 57) && (event.key != '.') && (event.key != ',')){event.preventDefault();}
+    if((event.target.value.includes('.')) && (event.key == '.' || event.key == ',')){event.preventDefault();}
 }
 
-function updateCurrencyInfo(index)
+function convertMoney2(event)
 {
-    
+    // Checking for correct input format
+    if(event.target.value[event.target.value.length - 1] == ',') event.target.value = event.target.value.replace(',', '.');
+    if((event.which < 48 || event.which > 57) && (event.key != '.') && (event.key != ',')){event.preventDefault();}
+    if((event.target.value.includes('.')) && (event.key == '.' || event.key == ',')){event.preventDefault();}
 }
 
-var requestURL = 'https://api.exchangerate.host/convert?from=USD&to=EUR&amount=1200&places=4';
-var request = new XMLHttpRequest();
-request.open('GET', requestURL);
-request.responseType = 'json';
-request.send();
+// Function that updates information about selected currencies
+function updateCurrencyInfo()
+{       
+    var requestURL = `https://api.exchangerate.host/convert?from=${firstCurrency}&to=${secondCurrency}`;
+    var request = new XMLHttpRequest();
+    request.open('GET', requestURL);
+    request.responseType = 'json';
+    request.send();
 
+    request.onload = function() {
+        var response = request.response;      
+      currencyInfos[0].innerHTML = `1 ${firstCurrency} = ${response.info.rate.toFixed(4)} ${secondCurrency}`;
+      currencyInfos[1].innerHTML = `1 ${secondCurrency} = ${parseFloat((1 / response.info.rate).toFixed(4))} ${firstCurrency}`;
+      defaultInfo = response;
+    }
+}
 
-
-        

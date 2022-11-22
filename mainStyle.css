@@ -88,7 +88,7 @@ body
     flex-wrap: wrap;
     margin-top: 40px;
     row-gap: 80px;
-    column-gap: 125px;    
+    column-gap: 123px;    
     box-sizing: border-box;    
 }
 
@@ -105,7 +105,7 @@ body
     display: flex;
     border: 1px solid #9F9F9F;    
     margin-top: 20px;   
-    box-sizing: content-box; 
+    box-sizing: border-box; 
     border-radius: 5px;    
 }
 
@@ -119,9 +119,9 @@ body
     align-items: center;
     text-align: center;
     color: #9F9F9F;
-    box-sizing: border-box;
-    height: 40px;
-    padding: 10px 20px;
+    box-sizing: border-box;  
+    height: 35px;  
+    padding: 10px 20px;    
 }
 
 .currency-value:first-child
