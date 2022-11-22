@@ -53,31 +53,38 @@ let firstCurrency, secondCurrency;
 firstCurrency = 'RUB';
 secondCurrency = 'USD';
 
-let defaultInfo;
+let currentCurrencyRate;
 
 // Eight buttons that change currencies
 const currencyButtons = document.getElementsByClassName('currency-value');
-changeColor(0); changeColor(5);
 
 // Adding event listener to each button
 for(let i = 0; i < currencyButtons.length; i++){currencyButtons[i].addEventListener('click', function(){changeColor(i);});}
 
 // Inputs where user enters value to be converted in both way
 const userInputs = document.getElementsByClassName('user-input');
-userInputs[0].addEventListener('keypress', convertMoney1);
-userInputs[1].addEventListener('keypress', convertMoney2);
+userInputs[0].addEventListener('keydown', checkInput);
+userInputs[0].addEventListener('keyup', convertMoney2);
 
+userInputs[1].addEventListener('keydown', checkInput);
+userInputs[1].addEventListener('keyup', convertMoney1);
+
+
+// Areas that show information about current selected currencies
 const currencyInfos = document.getElementsByClassName('currency-info');
+changeColor(0); changeColor(5);
 
-function changeColor(index)
-{   
-    console.log(defaultInfo);
+
+async function changeColor(index)
+{       
     if(index < 4)
     {
         firstCurrency = currencyButtons[index].textContent;                
+        await updateCurrencyInfo();
+        convertMoney1();    
         currencyButtons[index].style.backgroundColor = '#833AE0';
         currencyButtons[index].style.color = 'white';
-
+        
         for(let i = 0; i < 4; i++)
         {
             if(i != index)
@@ -86,17 +93,16 @@ function changeColor(index)
                 currencyButtons[i].style.color = '#9F9F9F';
             }
         }
-
-
     }
 
     else
     {
         secondCurrency = currencyButtons[index].textContent;
-        updateCurrencyInfo();        
+        await updateCurrencyInfo();      
+        convertMoney2();          
         currencyButtons[index].style.backgroundColor = '#833AE0';
         currencyButtons[index].style.color = 'white';
-
+        
         for(let i = 4; i < 8; i++)
         {
             if(i != index)
@@ -108,36 +114,81 @@ function changeColor(index)
     }
 }
 
-function convertMoney1(event)
+// Checking for correct input format
+function checkInput(event)
 {   
-    // Checking for correct input format
     if(event.target.value[event.target.value.length - 1] == ',') event.target.value = event.target.value.replace(',', '.');
-    if((event.which < 48 || event.which > 57) && (event.key != '.') && (event.key != ',')){event.preventDefault();}
+    if((event.which < 48 || event.which > 57) && (event.key != '.') && (event.key != ',') && (event.which != 8)){event.preventDefault();}
     if((event.target.value.includes('.')) && (event.key == '.' || event.key == ',')){event.preventDefault();}
+    if(event.target.value == '' && (event.key == '.' || event.key == ',')) event.preventDefault();        
+
 }
 
-function convertMoney2(event)
-{
-    // Checking for correct input format
-    if(event.target.value[event.target.value.length - 1] == ',') event.target.value = event.target.value.replace(',', '.');
-    if((event.which < 48 || event.which > 57) && (event.key != '.') && (event.key != ',')){event.preventDefault();}
-    if((event.target.value.includes('.')) && (event.key == '.' || event.key == ',')){event.preventDefault();}
-}
 
 // Function that updates information about selected currencies
-function updateCurrencyInfo()
-{       
+async function updateCurrencyInfo()
+{               
     var requestURL = `https://api.exchangerate.host/convert?from=${firstCurrency}&to=${secondCurrency}`;
-    var request = new XMLHttpRequest();
-    request.open('GET', requestURL);
-    request.responseType = 'json';
-    request.send();
+      await fetch(requestURL).then(response => response.json()).then((data) => 
+        {
+            currencyInfos[0].innerHTML = `1 ${firstCurrency} = ${parseFloat(data.info.rate.toFixed(4))} ${secondCurrency}`;
+            currencyInfos[1].innerHTML = `1 ${secondCurrency} = ${parseFloat((1 / data.info.rate).toFixed(4))} ${firstCurrency}`;            
+            currentCurrencyRate = data.info.rate;            
+        });
+}    
 
-    request.onload = function() {
-        var response = request.response;      
-      currencyInfos[0].innerHTML = `1 ${firstCurrency} = ${response.info.rate.toFixed(4)} ${secondCurrency}`;
-      currencyInfos[1].innerHTML = `1 ${secondCurrency} = ${parseFloat((1 / response.info.rate).toFixed(4))} ${firstCurrency}`;
-      defaultInfo = response;
+// Works when you write something in second input and updates first based on second
+function convertMoney1()
+{               
+    
+    let modifiedValue = userInputs[1].value.replaceAll(' ', '');
+    userInputs[1].value = formatThousands(modifiedValue);  
+    
+    if(userInputs[1].value[modifiedValue.length -1] == '.' ||  userInputs[1].value[modifiedValue.length -1] == ',')
+    {
+        modifiedValue = modifiedValue.replace(',','.');
+        modifiedValue += '0';
     }
+
+    let newValue = parseFloat((modifiedValue * 1/currentCurrencyRate).toFixed(4));
+
+    if(newValue > 0)
+        userInputs[0].value = formatThousands(newValue);         
 }
 
+// Works when you write something in first input and updates second based on first
+function convertMoney2()
+{            
+    let modifiedValue = userInputs[0].value.replaceAll(' ', '');
+    userInputs[0].value = formatThousands(modifiedValue); 
+
+    if(userInputs[0].value[modifiedValue.length -1] == '.' ||  userInputs[0].value[modifiedValue.length -1] == ',')
+    {
+        modifiedValue = modifiedValue.replace(',','.');
+        modifiedValue += '0';
+    } 
+
+    let newValue = parseFloat((modifiedValue * currentCurrencyRate).toFixed(4));
+
+    if(newValue > 0)    
+        userInputs[1].value = formatThousands(newValue);     
+    
+}
+
+function formatThousands(x) {    
+    if(!isNaN(x))
+    {
+        var parts = x.toString().split(".");
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");    
+        console.log(parts.join('.'));   
+        return parts.join(".");
+    }
+
+    else 
+    {
+        console.log(x);
+        console.log('worked');
+        return '';
+    }
+
+}
