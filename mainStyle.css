@@ -124,6 +124,8 @@ body
     padding: 10px 20px;    
 }
 
+.currency-value:hover{cursor: pointer;}
+
 .currency-value:first-child
 {
     border-left: 0px;

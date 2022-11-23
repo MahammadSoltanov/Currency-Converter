@@ -6,16 +6,27 @@
     .header
     {
         padding: 15px 80px;
-        height: 100px;    
+        box-sizing: content-box;        
+        height: 100px; 
+        justify-content: center;        
+        column-gap: 100px;
+        
+        height: 100px;
+    }
+
+    img
+    {        
+        width: 30%;
+        height: auto;
     }
 
     /* #region Collapsible Menu */
     .collapsible
     {
         position: relative;        
-        margin-left: 100px;
+        
         margin-top: auto;
-        margin-bottom: auto;
+        margin-bottom: auto;        
     }
 
     .collapsible-menu
@@ -30,12 +41,13 @@
         pointer-events: none;
         transition: transform 200ms ease-in-out;
         box-sizing: border-box;
-        padding: 0 5px 5px 0;
+        padding: 7px;
+        
     }
 
     .collapsible-menu p
     {
-        font-size: 20px;
+        font-size: 18px;
         color: gray;
         margin-top: 3px;
         background-color: white;
@@ -50,9 +62,10 @@
     .drop-menu-button
     {
         border: 0px;
+        
         text-decoration: none;
         background-color: whitesmoke;
-        font-size: 30px;
+        font-size: 50px;
         color: #833AE0;
         border-radius: 10px 0 0 0;        
     }
@@ -67,15 +80,15 @@
 
     .login
     {               
-        font-size: 20px;
+        font-size: 40px;
         font-weight: 500;                        
         margin-top: 5px;        
         border-radius: 10px;                
-        padding: 0 10px;
-        height: 40px;
+        padding: 0 15px;
+        height: 50px;
         margin-top: auto;
         margin-bottom: auto;
-        margin-left: 100px;
+        margin-left: 0px;
     }
 
     .logo
@@ -129,7 +142,7 @@
 
     .currency-value
     {
-        font-size: 28px;
+        font-size: 26px;
     }
 
     .user-input

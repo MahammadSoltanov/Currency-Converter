@@ -6,8 +6,9 @@ function mainLogic(ifMobile)
     {        
         header.innerHTML = `<img src="/images/logo.svg">
         
+        <button class="login">ВОЙТИ</button>
         <div class="collapsible">
-        <button class="drop-menu-button">Меню</button> 
+        <button class="drop-menu-button">☰</button> 
         <div class="collapsible-menu">
         <p>БАНК</p>
         <p>БИЗНЕС</p>
@@ -17,9 +18,8 @@ function mainLogic(ifMobile)
         <p>ПУТЕШЕСТВИЕ</p>
         <p>РАЗВЛЕЧЕНИЕ</p>
         </div>
-        </div>
+        </div>`
         
-        <button class="login">ВОЙТИ</button>`
     }
     // Tablet and PC logic
     else
@@ -109,7 +109,7 @@ async function changeColor(index)
 // Checking for correct input format
 function checkInput(event)
 {   
-    if(event.target.value[0] == '0' && event.target.value[1] != '.' && event.target.value.length > 1) event.preventDefault();
+    if(event.target.value[0] == '0' && event.target.value[1] != '.' && event.target.value.length > 1) event.preventDefault();   
     if(event.target.value[event.target.value.length - 1] == ',') event.target.value = event.target.value.replace(',', '.');
     if((event.which < 48 || event.which > 57) && (event.key != '.') && (event.key != ',') && (event.which != 8) && (event.which != 37) && (event.which != 39) && (event.which < 96 || event.which > 105) ){event.preventDefault();}
     if((event.target.value.includes('.')) && (event.key == '.' || event.key == ',')){event.preventDefault();}
@@ -136,17 +136,17 @@ function convertMoney1()
         end = userInputs[1].selectionEnd,
         oldValue = userInputs[1].value;
 
-        if(userInputs[0].value[0] == '0' && userInputs[1].value[1] != '.' && userInputs[1].value.length > 1) userInputs[1].value = userInputs[1].value.replace('0', '');
-
+        
     let modifiedValue = userInputs[1].value.replaceAll(' ', '');
     modifiedValue = modifiedValue.replace(',','.');     
     
     let formatted = formatThousands(modifiedValue);  
     userInputs[1].value = formatted;
-
+    if(userInputs[1].value[1] == '0' && userInputs[1].value[1] != '.' && userInputs[1].value.length > 1) userInputs[1].value = userInputs[1].value.replace('0', '');
+    
     if(oldValue.length < userInputs[1].value.length){start++; end++;}    
     else if(oldValue.length > userInputs[1].value.length){start--; end--;}
-
+        
     userInputs[1].setSelectionRange(start, end);
 
     let newValue = parseFloat((modifiedValue * 1/currentCurrencyRate).toFixed(4));
@@ -161,15 +161,14 @@ function convertMoney2()
         end = userInputs[0].selectionEnd,
         oldValue = userInputs[0].value;
 
-    if(userInputs[0].value[0] == '0' && userInputs[0].value[1] != '.' && userInputs[0].value.length > 1) userInputs[0].value = userInputs[0].value.replace('0', '');
-    
-
+        
     let modifiedValue = userInputs[0].value.replaceAll(' ', '');
     modifiedValue = modifiedValue.replace(',','.');            
     
     let formatted = formatThousands(modifiedValue);     
     userInputs[0].value = formatted;
-    
+    if(userInputs[0].value[0] == '0' && userInputs[0].value[1] != '.' && userInputs[0].value.length > 1) userInputs[0].value = userInputs[0].value.replace('0', '');
+        
     if(oldValue.length < userInputs[0].value.length){start++; end++;}    
     else if(oldValue.length > userInputs[0].value.length){start--; end--;}
 
