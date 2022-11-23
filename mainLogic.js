@@ -49,11 +49,9 @@ window.addEventListener('resize', function(event) {
 //#endregion
 
 // Variables that contain current currencies
-let firstCurrency, secondCurrency;
+let firstCurrency, secondCurrency, currentCurrencyRate;
 firstCurrency = 'RUB';
 secondCurrency = 'USD';
-
-let currentCurrencyRate;
 
 // Eight buttons that change currencies
 const currencyButtons = document.getElementsByClassName('currency-value');
@@ -73,7 +71,6 @@ userInputs[1].addEventListener('keyup', convertMoney1);
 // Areas that show information about current selected currencies
 const currencyInfos = document.getElementsByClassName('currency-info');
 changeColor(0); changeColor(5);
-
 
 async function changeColor(index)
 {       
@@ -118,10 +115,9 @@ async function changeColor(index)
 function checkInput(event)
 {   
     if(event.target.value[event.target.value.length - 1] == ',') event.target.value = event.target.value.replace(',', '.');
-    if((event.which < 48 || event.which > 57) && (event.key != '.') && (event.key != ',') && (event.which != 8)){event.preventDefault();}
+    if((event.which < 48 || event.which > 57) && (event.key != '.') && (event.key != ',') && (event.which != 8) && (event.which != 37) && (event.which != 39)){event.preventDefault();}
     if((event.target.value.includes('.')) && (event.key == '.' || event.key == ',')){event.preventDefault();}
     if(event.target.value == '' && (event.key == '.' || event.key == ',')) event.preventDefault();        
-
 }
 
 
@@ -129,66 +125,69 @@ function checkInput(event)
 async function updateCurrencyInfo()
 {               
     var requestURL = `https://api.exchangerate.host/convert?from=${firstCurrency}&to=${secondCurrency}`;
-      await fetch(requestURL).then(response => response.json()).then((data) => 
-        {
-            currencyInfos[0].innerHTML = `1 ${firstCurrency} = ${parseFloat(data.info.rate.toFixed(4))} ${secondCurrency}`;
-            currencyInfos[1].innerHTML = `1 ${secondCurrency} = ${parseFloat((1 / data.info.rate).toFixed(4))} ${firstCurrency}`;            
-            currentCurrencyRate = data.info.rate;            
-        });
+    await fetch(requestURL).then(response => response.json()).then((data) => 
+    {
+        currencyInfos[0].innerHTML = `1 ${firstCurrency} = ${parseFloat(data.info.rate.toFixed(4))} ${secondCurrency}`;
+        currencyInfos[1].innerHTML = `1 ${secondCurrency} = ${parseFloat((1 / data.info.rate).toFixed(4))} ${firstCurrency}`;            
+        currentCurrencyRate = data.info.rate;            
+    });
 }    
 
 // Works when you write something in second input and updates first based on second
 function convertMoney1()
 {               
-    
+    var start = userInputs[1].selectionStart,
+        end = userInputs[1].selectionEnd,
+        oldValue = userInputs[1].value;
+
     let modifiedValue = userInputs[1].value.replaceAll(' ', '');
-    userInputs[1].value = formatThousands(modifiedValue);  
+    if(userInputs[1].value[modifiedValue.length -1] == '.' ||  userInputs[1].value[modifiedValue.length -1] == ',') modifiedValue = modifiedValue.replace(',','.');     
     
-    if(userInputs[1].value[modifiedValue.length -1] == '.' ||  userInputs[1].value[modifiedValue.length -1] == ',')
-    {
-        modifiedValue = modifiedValue.replace(',','.');
-        modifiedValue += '0';
-    }
+    let formatted = formatThousands(modifiedValue);  
+    userInputs[1].value = formatted;
+
+    if(oldValue.length < userInputs[1].value.length){start++; end++;}    
+    else if(oldValue.length > userInputs[1].value.length){start--; end--;}
+
+    userInputs[1].setSelectionRange(start, end);
 
     let newValue = parseFloat((modifiedValue * 1/currentCurrencyRate).toFixed(4));
-
-    if(newValue > 0)
-        userInputs[0].value = formatThousands(newValue);         
+    if(modifiedValue == '') newValue = '';  
+    if(newValue > 0) userInputs[0].value = formatThousands(newValue);         
 }
 
 // Works when you write something in first input and updates second based on first
 function convertMoney2()
-{            
-    let modifiedValue = userInputs[0].value.replaceAll(' ', '');
-    userInputs[0].value = formatThousands(modifiedValue); 
+{                
+    var start = userInputs[0].selectionStart,
+        end = userInputs[0].selectionEnd,
+        oldValue = userInputs[0].value;
 
-    if(userInputs[0].value[modifiedValue.length -1] == '.' ||  userInputs[0].value[modifiedValue.length -1] == ',')
-    {
-        modifiedValue = modifiedValue.replace(',','.');
-        modifiedValue += '0';
-    } 
+    let modifiedValue = userInputs[0].value.replaceAll(' ', '');
+    if(userInputs[0].value[modifiedValue.length -1] == '.' ||  userInputs[0].value[modifiedValue.length -1] == ',') modifiedValue = modifiedValue.replace(',','.');            
+    
+    let formatted = formatThousands(modifiedValue);     
+    userInputs[0].value = formatted;
+    
+    if(oldValue.length < userInputs[0].value.length){start++; end++;}    
+    else if(oldValue.length > userInputs[0].value.length){start--; end--;}
+
+    userInputs[0].setSelectionRange(start, end);
 
     let newValue = parseFloat((modifiedValue * currentCurrencyRate).toFixed(4));
-
-    if(newValue > 0)    
-        userInputs[1].value = formatThousands(newValue);     
-    
+    if(modifiedValue == '') newValue = '';        
+    if(newValue >= 0) userInputs[1].value = formatThousands(newValue);             
 }
 
-function formatThousands(x) {    
+function formatThousands(x) 
+{            
     if(!isNaN(x))
     {
         var parts = x.toString().split(".");
-        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");    
-        console.log(parts.join('.'));   
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");                     
         return parts.join(".");
     }
 
-    else 
-    {
-        console.log(x);
-        console.log('worked');
-        return '';
-    }
-
+    else return '';
+    
 }
