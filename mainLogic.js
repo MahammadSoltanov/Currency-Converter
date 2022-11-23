@@ -109,8 +109,9 @@ async function changeColor(index)
 // Checking for correct input format
 function checkInput(event)
 {   
+    if(event.target.value[0] == '0' && event.target.value[1] != '.' && event.target.value.length > 1) event.preventDefault();
     if(event.target.value[event.target.value.length - 1] == ',') event.target.value = event.target.value.replace(',', '.');
-    if((event.which < 48 || event.which > 57) && (event.key != '.') && (event.key != ',') && (event.which != 8) && (event.which != 37) && (event.which != 39)){event.preventDefault();}
+    if((event.which < 48 || event.which > 57) && (event.key != '.') && (event.key != ',') && (event.which != 8) && (event.which != 37) && (event.which != 39) && (event.which < 96 || event.which > 105) ){event.preventDefault();}
     if((event.target.value.includes('.')) && (event.key == '.' || event.key == ',')){event.preventDefault();}
     if(event.target.value == '' && (event.key == '.' || event.key == ',')) event.preventDefault();        
 }
@@ -135,6 +136,8 @@ function convertMoney1()
         end = userInputs[1].selectionEnd,
         oldValue = userInputs[1].value;
 
+        if(userInputs[0].value[0] == '0' && userInputs[1].value[1] != '.' && userInputs[1].value.length > 1) userInputs[1].value = userInputs[1].value.replace('0', '');
+
     let modifiedValue = userInputs[1].value.replaceAll(' ', '');
     modifiedValue = modifiedValue.replace(',','.');     
     
@@ -157,6 +160,9 @@ function convertMoney2()
     var start = userInputs[0].selectionStart,
         end = userInputs[0].selectionEnd,
         oldValue = userInputs[0].value;
+
+    if(userInputs[0].value[0] == '0' && userInputs[0].value[1] != '.' && userInputs[0].value.length > 1) userInputs[0].value = userInputs[0].value.replace('0', '');
+    
 
     let modifiedValue = userInputs[0].value.replaceAll(' ', '');
     modifiedValue = modifiedValue.replace(',','.');            
