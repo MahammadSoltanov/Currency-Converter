@@ -50,8 +50,7 @@ window.addEventListener('resize', function(event) {
 
 // Variables that contain current currencies
 let firstCurrency, secondCurrency, currentCurrencyRate;
-firstCurrency = 'RUB';
-secondCurrency = 'USD';
+firstCurrency = 'RUB'; secondCurrency = 'USD';
 
 // Eight buttons that change currencies
 const currencyButtons = document.getElementsByClassName('currency-value');
@@ -61,12 +60,8 @@ for(let i = 0; i < currencyButtons.length; i++){currencyButtons[i].addEventListe
 
 // Inputs where user enters value to be converted in both way
 const userInputs = document.getElementsByClassName('user-input');
-userInputs[0].addEventListener('keydown', checkInput);
-userInputs[0].addEventListener('keyup', convertMoney2);
-
-userInputs[1].addEventListener('keydown', checkInput);
-userInputs[1].addEventListener('keyup', convertMoney1);
-
+userInputs[0].addEventListener('keydown', checkInput); userInputs[0].addEventListener('keyup', convertMoney2);
+userInputs[1].addEventListener('keydown', checkInput); userInputs[1].addEventListener('keyup', convertMoney1);
 
 // Areas that show information about current selected currencies
 const currencyInfos = document.getElementsByClassName('currency-info');
@@ -79,7 +74,7 @@ async function changeColor(index)
         firstCurrency = currencyButtons[index].textContent;                
         await updateCurrencyInfo();
         convertMoney1();    
-        currencyButtons[index].style.backgroundColor = '#833AE0';
+        currencyButtons[index].style.backgroundColor = '#833AE0'; 
         currencyButtons[index].style.color = 'white';
         
         for(let i = 0; i < 4; i++)
@@ -141,7 +136,7 @@ function convertMoney1()
         oldValue = userInputs[1].value;
 
     let modifiedValue = userInputs[1].value.replaceAll(' ', '');
-    if(userInputs[1].value[modifiedValue.length -1] == '.' ||  userInputs[1].value[modifiedValue.length -1] == ',') modifiedValue = modifiedValue.replace(',','.');     
+    modifiedValue = modifiedValue.replace(',','.');     
     
     let formatted = formatThousands(modifiedValue);  
     userInputs[1].value = formatted;
@@ -152,8 +147,8 @@ function convertMoney1()
     userInputs[1].setSelectionRange(start, end);
 
     let newValue = parseFloat((modifiedValue * 1/currentCurrencyRate).toFixed(4));
-    if(modifiedValue == '') newValue = '';  
-    if(newValue > 0) userInputs[0].value = formatThousands(newValue);         
+    if(modifiedValue == '' || formatted == '') newValue = '';        
+    if(newValue >= 0) userInputs[0].value = formatThousands(newValue);         
 }
 
 // Works when you write something in first input and updates second based on first
@@ -164,7 +159,7 @@ function convertMoney2()
         oldValue = userInputs[0].value;
 
     let modifiedValue = userInputs[0].value.replaceAll(' ', '');
-    if(userInputs[0].value[modifiedValue.length -1] == '.' ||  userInputs[0].value[modifiedValue.length -1] == ',') modifiedValue = modifiedValue.replace(',','.');            
+    modifiedValue = modifiedValue.replace(',','.');            
     
     let formatted = formatThousands(modifiedValue);     
     userInputs[0].value = formatted;
@@ -175,12 +170,13 @@ function convertMoney2()
     userInputs[0].setSelectionRange(start, end);
 
     let newValue = parseFloat((modifiedValue * currentCurrencyRate).toFixed(4));
-    if(modifiedValue == '') newValue = '';        
+    if(modifiedValue == '' || formatted == '') newValue = '';        
     if(newValue >= 0) userInputs[1].value = formatThousands(newValue);             
 }
 
 function formatThousands(x) 
-{            
+{               
+        
     if(!isNaN(x))
     {
         var parts = x.toString().split(".");
@@ -189,5 +185,4 @@ function formatThousands(x)
     }
 
     else return '';
-    
 }
